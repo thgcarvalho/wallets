@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Status {
+  ACTIVE
+  DELETED
+}
+
+model Wallet {
+  uuid        String   @id @default(uuid()) @db.Uuid
+  name        String   @db.VarChar(100)
+  description String?  @db.VarChar(255)
+  type        String   @db.VarChar(50) // hot, cold, exchange, etc.
+  status      Status   @default(ACTIVE)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  assets Asset[]
+
+  @@map("wallet")
+}
+
+model Asset {
+  uuid       String   @id @default(uuid()) @db.Uuid
+  symbol     String   @db.VarChar(20)
+  name       String   @db.VarChar(100)
+  quantity   Decimal  @db.Decimal(20, 8)
+  buyPrice   Decimal? @db.Decimal(20, 8)
+  currentPrice Decimal? @db.Decimal(20, 8)
+  walletId   String   @map("wallet_id") @db.Uuid
+  status     Status   @default(ACTIVE)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  wallet Wallet @relation(fields: [walletId], references: [uuid])
+
+  @@map("asset")
+}

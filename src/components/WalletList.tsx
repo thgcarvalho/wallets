@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { getWalletsWithAssets, getWalletValue, convertToCurrency, formatCurrency } from '../data/mockData';
+import { getWalletsWithAssets, getWalletValue, convertToCurrency, formatCurrency, getWalletPercentage } from '../data/mockData';
 import { Plus, MoreVertical, ChevronDown, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { useCurrency } from '../contexts/CurrencyContext';
@@ -84,9 +84,14 @@ export default function WalletList() {
                       {getWalletTypeLabel(wallet.type)}
                     </span>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">
-                        {formatCurrency(convertToCurrency(getWalletValue(wallet.uuid), selectedCurrency), selectedCurrency)}
-                      </span>
+                      <div className="text-right">
+                        <div className="text-sm text-muted-foreground">
+                          {formatCurrency(convertToCurrency(getWalletValue(wallet.uuid), selectedCurrency), selectedCurrency)}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          {getWalletPercentage(wallet.uuid).toFixed(1)}% do total
+                        </div>
+                      </div>
                       <button 
                         className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200"
                         onClick={(e) => {
@@ -117,6 +122,17 @@ export default function WalletList() {
                     <span className="text-sm text-muted-foreground">
                       {wallet.assets?.length || 0} ativos
                     </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        {getWalletPercentage(wallet.uuid).toFixed(1)}% do portfólio
+                      </span>
+                      <div className="w-16 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-blue-500 transition-all duration-300"
+                          style={{ width: `${getWalletPercentage(wallet.uuid)}%` }}
+                        ></div>
+                      </div>
+                    </div>
                   </div>
 
                   {wallet.assets && wallet.assets.length > 0 && (

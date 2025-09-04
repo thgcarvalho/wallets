@@ -1,14 +1,25 @@
 'use client';
 
-import { getAssetAllocation } from '../data/mockData';
+interface AssetData {
+  uuid: string;
+  symbol: string;
+  name: string;
+  allocation: number;
+  value: number;
+  quantity: number;
+  wallet?: {
+    name: string;
+  };
+}
 
 interface PieChartProps {
+  data: AssetData[];
   width?: number;
   height?: number;
 }
 
-export default function PieChart({ width = 300, height = 300 }: PieChartProps) {
-  const assets = getAssetAllocation();
+export default function PieChart({ data, width = 300, height = 300 }: PieChartProps) {
+  const assets = data;
   
   // Cores para cada slice do gráfico
   const colors = [
@@ -65,11 +76,7 @@ export default function PieChart({ width = 300, height = 300 }: PieChartProps) {
   const radius = Math.min(width, height) / 2 - 20;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 text-center">
-        Alocação de Ativos
-      </h3>
-      
+    <div className="w-full">
       <div className="flex justify-center mb-6">
         <svg width={width} height={height} className="drop-shadow-lg">
           {/* Slices do gráfico */}

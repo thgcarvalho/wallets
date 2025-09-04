@@ -300,3 +300,51 @@ export const getCurrencySymbol = (currency: 'USD' | 'BTC' | 'EUR'): string => {
       return '$';
   }
 };
+
+// Função para obter percentual de cada carteira
+export const getWalletPercentage = (walletId: string): number => {
+  const totalValue = getTotalPortfolioValue();
+  const walletValue = getWalletValue(walletId);
+  return totalValue > 0 ? (walletValue / totalValue) * 100 : 0;
+};
+
+// Função para obter ativos agrupados por símbolo
+export const getGroupedAssets = () => {
+  const assetAllocation = getAssetAllocation();
+  const grouped: { [key: string]: any } = {};
+
+  assetAllocation.forEach(asset => {
+    if (!grouped[asset.symbol]) {
+      grouped[asset.symbol] = {
+        symbol: asset.symbol,
+        name: asset.name,
+        totalQuantity: 0,
+        totalValue: 0,
+        allocation: 0,
+        wallets: []
+      };
+    }
+    
+    grouped[asset.symbol].totalQuantity += asset.quantity;
+    grouped[asset.symbol].totalValue += asset.value;
+    grouped[asset.symbol].wallets.push({
+      walletName: asset.wallet?.name || 'N/A',
+      quantity: asset.quantity,
+      value: asset.value,
+      uuid: asset.uuid
+    });
+  });
+
+  // Calcular alocação total para cada ativo agrupado
+  const totalValue = getTotalPortfolioValue();
+  Object.values(grouped).forEach((asset: any) => {
+    asset.allocation = totalValue > 0 ? (asset.totalValue / totalValue) * 100 : 0;
+  });
+
+  return Object.values(grouped).sort((a: any, b: any) => b.allocation - a.allocation);
+};
+
+// Função para obter ativos detalhados por carteira
+export const getDetailedAssets = () => {
+  return getAssetAllocation();
+};

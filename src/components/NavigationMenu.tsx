@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronDown, BarChart3, PieChart, Wallet, Home, Menu, X } from 'lucide-react';
+import { ChevronDown, BarChart3, PieChart, Wallet, Home, Menu, X, Coins } from 'lucide-react';
 
 export default function NavigationMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +16,12 @@ export default function NavigationMenu() {
       href: '/',
       icon: Home,
       description: 'Visão geral do portfólio'
+    },
+    {
+      name: 'Ativos',
+      href: '/assets',
+      icon: Coins,
+      description: 'Visualização detalhada dos ativos'
     },
     {
       name: 'Dashboard',

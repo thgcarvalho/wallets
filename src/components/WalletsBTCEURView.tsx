@@ -9,14 +9,14 @@ export default function WalletsBTCEURView() {
   // Nomes simbólicos para as carteiras (como na imagem 3)
   const getWalletSymbolicName = (walletName: string) => {
     const symbolicNames: { [key: string]: string } = {
-      '1-LDG-CLD-STR': 'Vela',
-      '2-BLU-ARG-TLY': 'Cisne',
-      '3-ELE-CLD-UND': 'Coração',
+      'LDG-CLD-STR': 'Vela',
+      'BLU-ARG-TLY': 'Cisne',
+      'ELE-CLD-UND': 'Coração',
       'ELE-HOT-BIN': 'Cadeira',
       'ELE-HOT-PLS': 'Gancho',
-      '6-BLU-HOT-TER': 'Cereja',
-      'BLU-HOT-TER': 'Vara',
-      'MET-HOT-DEF': 'BIN',
+      'BLU-HOT-TER': 'Cereja',
+      'MET-HOT-DEF': 'Vara',
+      'XMET-HOT-DEF': 'BIN',
       'TZR-CLD-DBM': 'CNX',
       'BINANCE': 'BIN'
     };

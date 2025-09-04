@@ -1,12 +1,14 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { getTotalPortfolioValue, getWalletsWithAssets } from '../data/mockData';
+import { getTotalPortfolioValue, getWalletsWithAssets, convertToCurrency, formatCurrency } from '../data/mockData';
 import { TrendingUp, TrendingDown, DollarSign, Wallet } from 'lucide-react';
+import { useCurrency } from '../contexts/CurrencyContext';
 
 export default function PortfolioSummary() {
   const totalValue = getTotalPortfolioValue();
   const wallets = getWalletsWithAssets();
+  const { selectedCurrency } = useCurrency();
   
   const totalWallets = wallets.length;
   const totalAssets = wallets.reduce((total, wallet) => total + (wallet.assets?.length || 0), 0);
@@ -20,7 +22,7 @@ export default function PortfolioSummary() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            ${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatCurrency(convertToCurrency(totalValue, selectedCurrency), selectedCurrency)}
           </div>
           <p className="text-xs text-muted-foreground">
             Portfólio completo

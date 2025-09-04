@@ -1,15 +1,16 @@
 'use client';
 
 import { getTotalPortfolioValue, getPerformanceRating, getPerformanceColor } from '../data/mockData';
+import { getBtcPrice, getEurRate } from '../data/currentPrices';
 
 export default function PortfolioOverview() {
   const totalValue = getTotalPortfolioValue();
   const performanceRating = getPerformanceRating(totalValue);
   const performanceColor = getPerformanceColor(performanceRating);
 
-  // Conversões para outras moedas (mockadas)
-  const eurValue = totalValue * 0.85; // Taxa de câmbio aproximada
-  const btcValue = totalValue / 118384; // Valor em BTC
+  // Conversões para outras moedas
+  const eurValue = totalValue * getEurRate();
+  const btcValue = totalValue / getBtcPrice();
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">

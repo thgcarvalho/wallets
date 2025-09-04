@@ -1,10 +1,11 @@
 import { Wallet } from '../types/Wallet';
 import { Asset } from '../types/Asset';
+import { getCurrentPrice, getBtcPrice, getEurRate } from './currentPrices';
 
 export const mockWallets: Wallet[] = [
   {
     uuid: '1',
-    name: '1-LDG-CLD-STR',
+    name: 'LDG-CLD-STR',
     description: 'Ledger Cold Storage',
     type: 'cold',
     status: 'ACTIVE',
@@ -13,16 +14,16 @@ export const mockWallets: Wallet[] = [
   },
   {
     uuid: '2',
-    name: '2-BLU-ARG-TLY',
-    description: 'Blue Wallet Argent',
-    type: 'hot',
+    name: 'BLU-ARG-TLY',
+    description: 'Blue Wallet Air-Gapped ',
+    type: 'cold',
     status: 'ACTIVE',
     createdAt: new Date('2024-01-15'),
     updatedAt: new Date('2024-01-15'),
   },
   {
     uuid: '3',
-    name: '3-ELE-CLD-UND',
+    name: 'ELE-CLD-UND',
     description: 'Electrum Cold Underground',
     type: 'cold',
     status: 'ACTIVE',
@@ -31,24 +32,6 @@ export const mockWallets: Wallet[] = [
   },
   {
     uuid: '4',
-    name: 'BINANCE',
-    description: 'Exchange Binance',
-    type: 'exchange',
-    status: 'ACTIVE',
-    createdAt: new Date('2024-02-15'),
-    updatedAt: new Date('2024-02-15'),
-  },
-  {
-    uuid: '5',
-    name: '6-BLU-HOT-TER',
-    description: 'Blue Wallet Hot Terra',
-    type: 'hot',
-    status: 'ACTIVE',
-    createdAt: new Date('2024-03-01'),
-    updatedAt: new Date('2024-03-01'),
-  },
-  {
-    uuid: '6',
     name: 'ELE-HOT-BIN',
     description: 'Electrum Hot Binance',
     type: 'hot',
@@ -57,7 +40,7 @@ export const mockWallets: Wallet[] = [
     updatedAt: new Date('2024-03-15'),
   },
   {
-    uuid: '7',
+    uuid: '5',
     name: 'ELE-HOT-PLS',
     description: 'Electrum Hot Plus',
     type: 'hot',
@@ -66,7 +49,7 @@ export const mockWallets: Wallet[] = [
     updatedAt: new Date('2024-04-01'),
   },
   {
-    uuid: '8',
+    uuid: '6',
     name: 'BLU-HOT-TER',
     description: 'Blue Wallet Hot Terra',
     type: 'hot',
@@ -75,7 +58,7 @@ export const mockWallets: Wallet[] = [
     updatedAt: new Date('2024-04-15'),
   },
   {
-    uuid: '9',
+    uuid: '7',
     name: 'MET-HOT-DEF',
     description: 'Metamask Hot DeFi',
     type: 'hot',
@@ -84,7 +67,7 @@ export const mockWallets: Wallet[] = [
     updatedAt: new Date('2024-05-01'),
   },
   {
-    uuid: '10',
+    uuid: '8',
     name: 'TZR-CLD-DBM',
     description: 'Tezos Cold Database',
     type: 'cold',
@@ -100,9 +83,9 @@ export const mockAssets: Asset[] = [
     uuid: '1',
     symbol: 'BTC',
     name: 'Bitcoin',
-    quantity: 0.06279681,
+    quantity: 0.0628,
     buyPrice: 45000,
-    currentPrice: 118384.00,
+    currentPrice: getCurrentPrice('BTC'),
     walletId: '1',
     status: 'ACTIVE',
     createdAt: new Date('2024-01-01'),
@@ -113,48 +96,35 @@ export const mockAssets: Asset[] = [
     uuid: '2',
     symbol: 'ETH',
     name: 'Ethereum',
-    quantity: 0.655977,
+    quantity: 0.0180,
     buyPrice: 2800,
-    currentPrice: 3816.92,
+    currentPrice: getCurrentPrice('ETH'),
     walletId: '1',
     status: 'ACTIVE',
     createdAt: new Date('2024-01-01'),
     updatedAt: new Date('2024-01-01'),
   },
-  // Solana
+  // Bitcoin para BLU-ARG-TLY
   {
     uuid: '3',
-    symbol: 'SOL',
-    name: 'Solana',
-    quantity: 7.780,
-    buyPrice: 95,
-    currentPrice: 1000.00,
+    symbol: 'BTC',
+    name: 'Bitcoin',
+    quantity: 0.01604994,
+    buyPrice: 45000,
+    currentPrice: getCurrentPrice('BTC'),
     walletId: '2',
     status: 'ACTIVE',
     createdAt: new Date('2024-01-15'),
     updatedAt: new Date('2024-01-15'),
   },
-  // AAVE
+  // Bitcoin para ELE-CLD-UND
   {
     uuid: '4',
-    symbol: 'AAVE',
-    name: 'Aave',
-    quantity: 6.200,
-    buyPrice: 250,
-    currentPrice: 311.54,
-    walletId: '2',
-    status: 'ACTIVE',
-    createdAt: new Date('2024-01-15'),
-    updatedAt: new Date('2024-01-15'),
-  },
-  // PENDLE
-  {
-    uuid: '5',
-    symbol: 'PENDLE',
-    name: 'Pendle',
-    quantity: 432.650,
-    buyPrice: 15,
-    currentPrice: 20.00,
+    symbol: 'BTC',
+    name: 'Bitcoin',
+    quantity: 0.04662472,
+    buyPrice: 45000,
+    currentPrice: getCurrentPrice('BTC'),
     walletId: '3',
     status: 'ACTIVE',
     createdAt: new Date('2024-02-01'),
@@ -162,29 +132,42 @@ export const mockAssets: Asset[] = [
   },
   // USDC
   {
-    uuid: '6',
+    uuid: '5',
     symbol: 'USDC',
     name: 'USD Coin',
-    quantity: 483.110,
+    quantity: 4708.45,
     buyPrice: 1.00,
-    currentPrice: 1.00,
-    walletId: '4',
+    currentPrice: getCurrentPrice('USDC'),
+    walletId: '1',
     status: 'ACTIVE',
     createdAt: new Date('2024-02-15'),
     updatedAt: new Date('2024-02-15'),
   },
   // USDT
   {
-    uuid: '7',
+    uuid: '6',
     symbol: 'USDT',
     name: 'Tether',
-    quantity: 0.000,
+    quantity: 2343.28,
     buyPrice: 1.00,
-    currentPrice: 1.00,
-    walletId: '4',
+    currentPrice: getCurrentPrice('USDT'),
+    walletId: '1',
     status: 'ACTIVE',
     createdAt: new Date('2024-02-15'),
     updatedAt: new Date('2024-02-15'),
+  },
+  // Bitcoin para BLU-HOT-TER
+  {
+    uuid: '7',
+    symbol: 'BTC',
+    name: 'Bitcoin',
+    quantity: 0.01800894,
+    buyPrice: 45000,
+    currentPrice: getCurrentPrice('BTC'),
+    walletId: '6',
+    status: 'ACTIVE',
+    createdAt: new Date('2024-04-15'),
+    updatedAt: new Date('2024-04-15'),
   },
 ];
 
@@ -245,8 +228,8 @@ export const getPerformanceColor = (rating: string): string => {
 
 // Função para obter valores em BTC e EUR
 export const getWalletValuesInBTCAndEUR = () => {
-  const btcPrice = 118384; // Preço atual do BTC
-  const eurRate = 0.85; // Taxa de câmbio USD/EUR
+  const btcPrice = getBtcPrice();
+  const eurRate = getEurRate();
   
   return mockWallets.map(wallet => {
     const walletValueUSD = getWalletValue(wallet.uuid);
@@ -265,12 +248,55 @@ export const getWalletValuesInBTCAndEUR = () => {
 // Função para obter totais em BTC e EUR
 export const getTotalValuesInBTCAndEUR = () => {
   const totalValueUSD = getTotalPortfolioValue();
-  const btcPrice = 118384;
-  const eurRate = 0.85;
+  const btcPrice = getBtcPrice();
+  const eurRate = getEurRate();
   
   return {
     totalUSD: totalValueUSD,
     totalBTC: totalValueUSD / btcPrice,
     totalEUR: totalValueUSD * eurRate
   };
+};
+
+// Funções de conversão de moedas
+export const convertToCurrency = (valueUSD: number, currency: 'USD' | 'BTC' | 'EUR'): number => {
+  const btcPrice = getBtcPrice();
+  const eurRate = getEurRate();
+  
+  switch (currency) {
+    case 'USD':
+      return valueUSD;
+    case 'BTC':
+      return valueUSD / btcPrice;
+    case 'EUR':
+      return valueUSD * eurRate;
+    default:
+      return valueUSD;
+  }
+};
+
+export const formatCurrency = (value: number, currency: 'USD' | 'BTC' | 'EUR'): string => {
+  switch (currency) {
+    case 'USD':
+      return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    case 'BTC':
+      return `₿${value.toFixed(8)}`;
+    case 'EUR':
+      return `€${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    default:
+      return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }
+};
+
+export const getCurrencySymbol = (currency: 'USD' | 'BTC' | 'EUR'): string => {
+  switch (currency) {
+    case 'USD':
+      return '$';
+    case 'BTC':
+      return '₿';
+    case 'EUR':
+      return '€';
+    default:
+      return '$';
+  }
 };

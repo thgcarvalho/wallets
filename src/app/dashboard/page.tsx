@@ -3,8 +3,11 @@ import AssetsTable from '../../components/AssetsTable';
 import PortfolioOverview from '../../components/PortfolioOverview';
 import PieChart from '../../components/PieChart';
 import Breadcrumb from '../../components/Breadcrumb';
+import { getAssetAllocation } from '../../data/mockData';
 
 export default function Dashboard() {
+  const assetData = getAssetAllocation();
+  
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <div className="container mx-auto px-4 py-8">
@@ -32,7 +35,7 @@ export default function Dashboard() {
           {/* Sidebar com overview e gráfico - 1/3 da largura */}
           <div className="space-y-6">
             <PortfolioOverview />
-            <PieChart />
+            <PieChart data={assetData} />
           </div>
         </div>
 

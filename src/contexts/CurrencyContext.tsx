@@ -11,7 +11,7 @@ interface CurrencyContextType {
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
-  const [selectedCurrency, setSelectedCurrency] = useState<Currency>('USD');
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency>('HIDDEN');
 
   return (
     <CurrencyContext.Provider value={{ selectedCurrency, setSelectedCurrency }}>

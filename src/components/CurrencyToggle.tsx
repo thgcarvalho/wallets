@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export type Currency = 'USD' | 'BTC' | 'EUR';
+export type Currency = 'BTC' | 'USD' | 'EUR' | 'HIDDEN';
 
 interface CurrencyToggleProps {
   selectedCurrency: Currency;
@@ -11,9 +11,10 @@ interface CurrencyToggleProps {
 
 export default function CurrencyToggle({ selectedCurrency, onCurrencyChange }: CurrencyToggleProps) {
   const currencies: { value: Currency; label: string; symbol: string }[] = [
-    { value: 'USD', label: 'Dólar', symbol: '$' },
     { value: 'BTC', label: 'Bitcoin', symbol: '₿' },
-    { value: 'EUR', label: 'Euro', symbol: '€' }
+    { value: 'USD', label: 'Dólar', symbol: '$' },
+    { value: 'EUR', label: 'Euro', symbol: '€' },
+    { value: 'HIDDEN', label: 'Oculto', symbol: '👁️' }
   ];
 
   return (

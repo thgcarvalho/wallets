@@ -1,11 +1,13 @@
 'use client';
 
-import { getAssetAllocation, getWalletsWithAssets } from '../data/mockData';
+import { getAssetAllocation, getWalletsWithAssets, convertToCurrency, formatCurrency } from '../data/mockData';
 import { ChevronDown, Wallet, Coins, Network, FileText } from 'lucide-react';
+import { useCurrency } from '../contexts/CurrencyContext';
 
 export default function AssetsTableWithWallets() {
   const assets = getAssetAllocation();
   const wallets = getWalletsWithAssets();
+  const { selectedCurrency } = useCurrency();
 
   const getWalletColor = (walletName: string) => {
     const colors = [
@@ -118,13 +120,13 @@ export default function AssetsTableWithWallets() {
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                  ${asset.currentPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {selectedCurrency === 'HIDDEN' ? '••••••' : `$${asset.currentPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                  {asset.quantity.toLocaleString('en-US', { minimumFractionDigits: 8, maximumFractionDigits: 8 })}
+                  {selectedCurrency === 'HIDDEN' ? '••••••' : asset.quantity.toLocaleString('en-US', { minimumFractionDigits: 8, maximumFractionDigits: 8 })}
                 </td>
                 <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
-                  ${asset.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {selectedCurrency === 'HIDDEN' ? '••••••' : formatCurrency(convertToCurrency(asset.value, selectedCurrency), selectedCurrency)}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
                   {asset.allocation.toFixed(8)}%

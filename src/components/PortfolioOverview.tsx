@@ -1,12 +1,14 @@
 'use client';
 
-import { getTotalPortfolioValue, getPerformanceRating, getPerformanceColor } from '../data/mockData';
+import { getTotalPortfolioValue, getPerformanceRating, getPerformanceColor, convertToCurrency, formatCurrency } from '../data/mockData';
 import { getBtcPrice, getEurRate } from '../data/currentPrices';
+import { useCurrency } from '../contexts/CurrencyContext';
 
 export default function PortfolioOverview() {
   const totalValue = getTotalPortfolioValue();
   const performanceRating = getPerformanceRating(totalValue);
   const performanceColor = getPerformanceColor(performanceRating);
+  const { selectedCurrency } = useCurrency();
 
   // Conversões para outras moedas
   const eurValue = totalValue * getEurRate();
@@ -27,19 +29,19 @@ export default function PortfolioOverview() {
           <div className="flex justify-between items-center">
             <span className="text-gray-600 dark:text-gray-400">USD:</span>
             <span className="font-semibold text-gray-900 dark:text-white">
-              ${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              {selectedCurrency === 'HIDDEN' ? '••••••' : `$${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
             </span>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-gray-600 dark:text-gray-400">EUR:</span>
             <span className="font-semibold text-gray-900 dark:text-white">
-              €{eurValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              {selectedCurrency === 'HIDDEN' ? '••••••' : `€{eurValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
             </span>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-gray-600 dark:text-gray-400">BTC:</span>
             <span className="font-semibold text-gray-900 dark:text-white">
-              {btcValue.toFixed(5)}
+              {selectedCurrency === 'HIDDEN' ? '••••••' : btcValue.toFixed(5)}
             </span>
           </div>
         </div>

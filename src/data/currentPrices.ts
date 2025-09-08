@@ -1,11 +1,11 @@
 // Preços atuais centralizados para todos os ativos
 export const CURRENT_PRICES = {
   // Criptomoedas principais
-  BTC: 118384.00,
-  ETH: 3816.92,
-  SOL: 1000.00,
-  AAVE: 311.54,
-  PENDLE: 20.00,
+  BTC: 110910.41,
+  ETH: 4295.60,
+  SOL: 202.28,
+  AAVE: 301.06,
+  PENDLE: 4.70,
   
   // Stablecoins
   USDC: 1.00,

@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { getTotalPortfolioValue, getWalletsWithAssets, convertToCurrency, formatCurrency } from '../data/mockData';
+import { getTotalPortfolioValue, getWalletsWithAssets, convertToCurrency, formatCurrency, formatValueWithCurrency } from '../data/mockData';
 import { TrendingUp, TrendingDown, DollarSign, Wallet } from 'lucide-react';
 import { useCurrency } from '../contexts/CurrencyContext';
 
@@ -22,7 +22,7 @@ export default function PortfolioSummary() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {formatCurrency(convertToCurrency(totalValue, selectedCurrency), selectedCurrency)}
+            {selectedCurrency === 'HIDDEN' ? '••••••' : formatCurrency(convertToCurrency(totalValue, selectedCurrency), selectedCurrency)}
           </div>
           <p className="text-xs text-muted-foreground">
             Portfólio completo

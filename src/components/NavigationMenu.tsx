@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronDown, BarChart3, PieChart, Wallet, Home, Menu, X, Coins } from 'lucide-react';
+import { ChevronDown, BarChart3, PieChart, Wallet, Home, Menu, X, Coins, Target, User } from 'lucide-react';
 
 export default function NavigationMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,10 +24,22 @@ export default function NavigationMenu() {
       description: 'Visualização detalhada dos ativos'
     },
     {
+      name: 'Rebalanceamento',
+      href: '/rebalance',
+      icon: Target,
+      description: 'Estratégias de rebalanciamento'
+    },
+    {
       name: 'Dashboard',
       href: '/dashboard',
       icon: BarChart3,
       description: 'Dashboard detalhado com gráficos'
+    },
+    {
+      name: 'Perfil',
+      href: '/profile',
+      icon: User,
+      description: 'Perfil de investidor e questionário'
     },
     {
       name: 'Visualizações',

@@ -259,7 +259,7 @@ export const getTotalValuesInBTCAndEUR = () => {
 };
 
 // Funções de conversão de moedas
-export const convertToCurrency = (valueUSD: number, currency: 'USD' | 'BTC' | 'EUR'): number => {
+export const convertToCurrency = (valueUSD: number, currency: 'USD' | 'BTC' | 'EUR' | 'HIDDEN'): number => {
   const btcPrice = getBtcPrice();
   const eurRate = getEurRate();
   
@@ -270,12 +270,14 @@ export const convertToCurrency = (valueUSD: number, currency: 'USD' | 'BTC' | 'E
       return valueUSD / btcPrice;
     case 'EUR':
       return valueUSD * eurRate;
+    case 'HIDDEN':
+      return 0; // Retorna 0 para ocultar valores
     default:
       return valueUSD;
   }
 };
 
-export const formatCurrency = (value: number, currency: 'USD' | 'BTC' | 'EUR'): string => {
+export const formatCurrency = (value: number, currency: 'USD' | 'BTC' | 'EUR' | 'HIDDEN'): string => {
   switch (currency) {
     case 'USD':
       return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -283,12 +285,14 @@ export const formatCurrency = (value: number, currency: 'USD' | 'BTC' | 'EUR'): 
       return `₿${value.toFixed(8)}`;
     case 'EUR':
       return `€${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    case 'HIDDEN':
+      return '••••••';
     default:
       return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }
 };
 
-export const getCurrencySymbol = (currency: 'USD' | 'BTC' | 'EUR'): string => {
+export const getCurrencySymbol = (currency: 'USD' | 'BTC' | 'EUR' | 'HIDDEN'): string => {
   switch (currency) {
     case 'USD':
       return '$';
@@ -296,9 +300,22 @@ export const getCurrencySymbol = (currency: 'USD' | 'BTC' | 'EUR'): string => {
       return '₿';
     case 'EUR':
       return '€';
+    case 'HIDDEN':
+      return '••••••';
     default:
       return '$';
   }
+};
+
+// Função para formatar valores considerando se a moeda está oculta
+export const formatValueWithCurrency = (value: number, currency: 'USD' | 'BTC' | 'EUR' | 'HIDDEN', showPercentage: boolean = false, percentage?: number): string => {
+  if (currency === 'HIDDEN') {
+    if (showPercentage && percentage !== undefined) {
+      return `${percentage.toFixed(1)}%`;
+    }
+    return '••••••';
+  }
+  return formatCurrency(value, currency);
 };
 
 // Função para obter percentual de cada carteira
@@ -347,4 +364,151 @@ export const getGroupedAssets = () => {
 // Função para obter ativos detalhados por carteira
 export const getDetailedAssets = () => {
   return getAssetAllocation();
+};
+
+// Estratégias de rebalanciamento pré-definidas
+export const REBALANCE_STRATEGIES = {
+  CONSERVATIVE: {
+    name: 'Constant-Mix Conservador',
+    description: '50% Criptomoedas, 50% Caixa',
+    cryptoTarget: 50,
+    cashTarget: 50,
+    color: 'bg-green-500'
+  },
+  MODERATE: {
+    name: 'Constant-Mix Moderado',
+    description: '70% Criptomoedas, 30% Caixa',
+    cryptoTarget: 70,
+    cashTarget: 30,
+    color: 'bg-yellow-500'
+  },
+  AGGRESSIVE: {
+    name: 'Constant-Mix Agressivo',
+    description: '90% Criptomoedas, 10% Caixa',
+    cryptoTarget: 90,
+    cashTarget: 10,
+    color: 'bg-red-500'
+  }
+};
+
+// Função para calcular indicadores de saúde da carteira
+export const getPortfolioHealth = () => {
+  const assets = getAssetAllocation();
+  const totalValue = getTotalPortfolioValue();
+  
+  // Calcular alocação atual
+  const cryptoAssets = assets.filter(asset => !['USDC', 'USDT'].includes(asset.symbol));
+  const cashAssets = assets.filter(asset => ['USDC', 'USDT'].includes(asset.symbol));
+  
+  const cryptoValue = cryptoAssets.reduce((sum, asset) => sum + asset.value, 0);
+  const cashValue = cashAssets.reduce((sum, asset) => sum + asset.value, 0);
+  
+  const cryptoPercentage = totalValue > 0 ? (cryptoValue / totalValue) * 100 : 0;
+  const cashPercentage = totalValue > 0 ? (cashValue / totalValue) * 100 : 0;
+  
+  // Calcular diversificação (número de ativos únicos)
+  const uniqueAssets = new Set(assets.map(asset => asset.symbol)).size;
+  const diversificationScore = Math.min(uniqueAssets * 10, 100); // Max 100 para 10+ ativos
+  
+  // Calcular concentração (maior ativo individual)
+  const maxAssetAllocation = Math.max(...assets.map(asset => asset.allocation));
+  const concentrationRisk = maxAssetAllocation > 50 ? 'Alto' : maxAssetAllocation > 30 ? 'Médio' : 'Baixo';
+  
+  // Calcular volatilidade estimada (baseada em tipos de ativos)
+  const volatilityScore = cryptoAssets.length > 0 ? 
+    Math.min(cryptoAssets.length * 15, 100) : 0;
+  
+  return {
+    cryptoPercentage,
+    cashPercentage,
+    diversificationScore,
+    concentrationRisk,
+    volatilityScore,
+    uniqueAssets,
+    maxAssetAllocation,
+    totalValue,
+    cryptoValue,
+    cashValue
+  };
+};
+
+// Função para gerar sugestões de rebalanciamento
+export const getRebalanceSuggestions = (strategy: keyof typeof REBALANCE_STRATEGIES) => {
+  const health = getPortfolioHealth();
+  const strategyConfig = REBALANCE_STRATEGIES[strategy];
+  
+  const suggestions = [];
+  
+  // Sugestão de alocação crypto/caixa
+  const cryptoDiff = health.cryptoPercentage - strategyConfig.cryptoTarget;
+  const cashDiff = health.cashPercentage - strategyConfig.cashTarget;
+  
+  if (Math.abs(cryptoDiff) > 5) { // Tolerância de 5%
+    if (cryptoDiff > 0) {
+      suggestions.push({
+        type: 'sell',
+        asset: 'Criptomoedas',
+        amount: Math.abs(cryptoDiff),
+        message: `Vender ${cryptoDiff.toFixed(1)}% de criptomoedas para atingir ${strategyConfig.cryptoTarget}%`,
+        priority: 'high'
+      });
+    } else {
+      suggestions.push({
+        type: 'buy',
+        asset: 'Criptomoedas',
+        amount: Math.abs(cryptoDiff),
+        message: `Comprar ${Math.abs(cryptoDiff).toFixed(1)}% de criptomoedas para atingir ${strategyConfig.cryptoTarget}%`,
+        priority: 'high'
+      });
+    }
+  }
+  
+  if (Math.abs(cashDiff) > 5) {
+    if (cashDiff > 0) {
+      suggestions.push({
+        type: 'sell',
+        asset: 'Caixa (USDC/USDT)',
+        amount: Math.abs(cashDiff),
+        message: `Vender ${cashDiff.toFixed(1)}% de caixa para atingir ${strategyConfig.cashTarget}%`,
+        priority: 'high'
+      });
+    } else {
+      suggestions.push({
+        type: 'buy',
+        asset: 'Caixa (USDC/USDT)',
+        amount: Math.abs(cashDiff),
+        message: `Comprar ${Math.abs(cashDiff).toFixed(1)}% de caixa para atingir ${strategyConfig.cashTarget}%`,
+        priority: 'high'
+      });
+    }
+  }
+  
+  // Sugestões de diversificação
+  if (health.uniqueAssets < 3) {
+    suggestions.push({
+      type: 'diversify',
+      asset: 'Novos Ativos',
+      amount: 0,
+      message: `Adicionar mais ativos para diversificação (atual: ${health.uniqueAssets})`,
+      priority: 'medium'
+    });
+  }
+  
+  // Sugestões de concentração
+  if (health.maxAssetAllocation > 50) {
+    suggestions.push({
+      type: 'rebalance',
+      asset: 'Ativo Concentrado',
+      amount: health.maxAssetAllocation - 40,
+      message: `Reduzir concentração do maior ativo (${health.maxAssetAllocation.toFixed(1)}%)`,
+      priority: 'medium'
+    });
+  }
+  
+  return {
+    strategy: strategyConfig,
+    currentHealth: health,
+    suggestions,
+    isBalanced: suggestions.length === 0
+  };
 };

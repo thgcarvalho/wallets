@@ -1,10 +1,12 @@
 'use client';
 
 import { getWalletValuesInBTCAndEUR, getTotalValuesInBTCAndEUR } from '../data/mockData';
+import { useCurrency } from '../contexts/CurrencyContext';
 
 export default function WalletsBTCEURView() {
   const walletsWithValues = getWalletValuesInBTCAndEUR();
   const totals = getTotalValuesInBTCAndEUR();
+  const { selectedCurrency } = useCurrency();
 
   // Nomes simbólicos para as carteiras (como na imagem 3)
   const getWalletSymbolicName = (walletName: string) => {
@@ -67,10 +69,10 @@ export default function WalletsBTCEURView() {
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                  {wallet.valueBTC > 0 ? wallet.valueBTC.toFixed(8) : ''}
+                  {selectedCurrency === 'HIDDEN' ? '••••••' : (wallet.valueBTC > 0 ? wallet.valueBTC.toFixed(8) : '')}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                  {wallet.valueEUR > 0 ? wallet.valueEUR.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€' : '#N/A'}
+                  {selectedCurrency === 'HIDDEN' ? '••••••' : (wallet.valueEUR > 0 ? wallet.valueEUR.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€' : '#N/A')}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
                   {wallet.name}
@@ -84,10 +86,10 @@ export default function WalletsBTCEURView() {
                 TOTAL
               </td>
               <td className="px-4 py-3 text-gray-900 dark:text-white">
-                {totals.totalBTC.toFixed(8)}
+                {selectedCurrency === 'HIDDEN' ? '••••••' : totals.totalBTC.toFixed(8)}
               </td>
               <td className="px-4 py-3 text-gray-900 dark:text-white">
-                {totals.totalEUR.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€
+                {selectedCurrency === 'HIDDEN' ? '••••••' : totals.totalEUR.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€'}
               </td>
               <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
                 -

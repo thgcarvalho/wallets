@@ -1,10 +1,12 @@
 'use client';
 
-import { getAssetAllocation } from '../data/mockData';
+import { getAssetAllocation, convertToCurrency, formatCurrency } from '../data/mockData';
+import { useCurrency } from '../contexts/CurrencyContext';
 import { ChevronDown, Coins } from 'lucide-react';
 
 export default function TotalGroupedView() {
   const assets = getAssetAllocation();
+  const { selectedCurrency } = useCurrency();
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
@@ -53,13 +55,13 @@ export default function TotalGroupedView() {
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                  ${asset.currentPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {selectedCurrency === 'HIDDEN' ? '••••••' : `$${asset.currentPrice?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                  {asset.quantity.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
+                  {selectedCurrency === 'HIDDEN' ? '••••••' : asset.quantity.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
                 </td>
                 <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
-                  ${asset.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {selectedCurrency === 'HIDDEN' ? '••••••' : formatCurrency(convertToCurrency(asset.value, selectedCurrency), selectedCurrency)}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
                   {asset.allocation.toFixed(4)}%

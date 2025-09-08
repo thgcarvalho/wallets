@@ -18,8 +18,19 @@ interface PieChartProps {
   height?: number;
 }
 
-export default function PieChart({ data, width = 300, height = 300 }: PieChartProps) {
-  const assets = data;
+export default function PieChart({ data = [], width = 300, height = 300 }: PieChartProps) {
+  const assets = data || [];
+  
+  // Se não há dados, mostrar mensagem
+  if (!assets || assets.length === 0) {
+    return (
+      <div className="w-full">
+        <div className="flex justify-center items-center h-64 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <p className="text-gray-500 dark:text-gray-400">Nenhum dado disponível para o gráfico</p>
+        </div>
+      </div>
+    );
+  }
   
   // Cores para cada slice do gráfico
   const colors = [
@@ -34,16 +45,17 @@ export default function PieChart({ data, width = 300, height = 300 }: PieChartPr
 
   // Calcular ângulos para cada slice
   let currentAngle = 0;
-  const slices = assets.map((asset) => {
+  const slices = assets.map((asset, index) => {
     const angle = (asset.allocation / 100) * 360;
-    const startAngle = currentAngle;
+    const startAngle = Math.round(currentAngle * 100) / 100; // Arredondar para evitar diferenças de precisão
     currentAngle += angle;
+    const endAngle = Math.round(currentAngle * 100) / 100; // Arredondar para evitar diferenças de precisão
     
     return {
       ...asset,
       startAngle,
-      endAngle: currentAngle,
-      color: colors[assets.indexOf(asset) % colors.length]
+      endAngle,
+      color: colors[index % colors.length]
     };
   });
 
@@ -80,9 +92,9 @@ export default function PieChart({ data, width = 300, height = 300 }: PieChartPr
       <div className="flex justify-center mb-6">
         <svg width={width} height={height} className="drop-shadow-lg">
           {/* Slices do gráfico */}
-          {slices.map((slice) => (
+          {slices.map((slice, index) => (
             <path
-              key={slice.uuid}
+              key={`slice-${slice.uuid}-${index}`}
               d={createSlicePath(centerX, centerY, radius, slice.startAngle, slice.endAngle)}
               fill={slice.color}
               stroke="#fff"
@@ -114,8 +126,8 @@ export default function PieChart({ data, width = 300, height = 300 }: PieChartPr
 
       {/* Legenda */}
       <div className="space-y-2">
-        {slices.map((slice) => (
-          <div key={slice.uuid} className="flex items-center justify-between text-sm">
+        {slices.map((slice, index) => (
+          <div key={`legend-${slice.uuid}-${index}`} className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2">
               <div 
                 className="w-3 h-3 rounded-full"

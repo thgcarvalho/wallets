@@ -86,7 +86,7 @@ export default function WalletList() {
                     <div className="flex items-center gap-2">
                       <div className="text-right">
                         <div className="text-sm text-muted-foreground">
-                          {formatCurrency(convertToCurrency(getWalletValue(wallet.uuid), selectedCurrency), selectedCurrency)}
+                          {selectedCurrency === 'HIDDEN' ? '••••••' : formatCurrency(convertToCurrency(getWalletValue(wallet.uuid), selectedCurrency), selectedCurrency)}
                         </div>
                         <div className="text-xs text-gray-500 dark:text-gray-400">
                           {getWalletPercentage(wallet.uuid).toFixed(1)}% do total
@@ -146,9 +146,11 @@ export default function WalletList() {
                               <div className="text-sm text-muted-foreground">{asset.name}</div>
                             </div>
                             <div className="text-right">
-                              <div className="font-medium text-gray-900 dark:text-white transition-colors duration-200">{asset.quantity}</div>
+                              <div className="font-medium text-gray-900 dark:text-white transition-colors duration-200">
+                                {selectedCurrency === 'HIDDEN' ? '••••••' : asset.quantity}
+                              </div>
                               <div className="text-sm text-muted-foreground">
-                                {formatCurrency(convertToCurrency((asset.currentPrice || asset.buyPrice || 0) * asset.quantity, selectedCurrency), selectedCurrency)}
+                                {selectedCurrency === 'HIDDEN' ? '••••••' : formatCurrency(convertToCurrency((asset.currentPrice || asset.buyPrice || 0) * asset.quantity, selectedCurrency), selectedCurrency)}
                               </div>
                             </div>
                           </div>

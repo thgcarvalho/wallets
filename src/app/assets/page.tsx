@@ -151,19 +151,20 @@ export default function AssetsPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                          {viewMode === 'grouped' 
-                            ? asset.totalQuantity.toLocaleString('en-US', { 
-                                minimumFractionDigits: 2, 
-                                maximumFractionDigits: 8 
-                              })
-                            : asset.quantity.toLocaleString('en-US', { 
-                                minimumFractionDigits: 2, 
-                                maximumFractionDigits: 8 
-                              })
-                          }
+                          {selectedCurrency === 'HIDDEN' ? '••••••' : (
+                            viewMode === 'grouped' 
+                              ? asset.totalQuantity.toLocaleString('en-US', { 
+                                  minimumFractionDigits: 2, 
+                                  maximumFractionDigits: 8 
+                                })
+                              : asset.quantity.toLocaleString('en-US', { 
+                                  minimumFractionDigits: 2, 
+                                  maximumFractionDigits: 8 
+                                })
+                          )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                          {formatCurrency(convertToCurrency(
+                          {selectedCurrency === 'HIDDEN' ? '••••••' : formatCurrency(convertToCurrency(
                             viewMode === 'grouped' ? asset.totalValue : asset.value, 
                             selectedCurrency
                           ), selectedCurrency)}
@@ -208,13 +209,13 @@ export default function AssetsPage() {
                               </div>
                             </td>
                             <td className="px-6 py-2 text-sm text-gray-600 dark:text-gray-400">
-                              {wallet.quantity.toLocaleString('en-US', { 
+                              {selectedCurrency === 'HIDDEN' ? '••••••' : wallet.quantity.toLocaleString('en-US', { 
                                 minimumFractionDigits: 2, 
                                 maximumFractionDigits: 8 
                               })}
                             </td>
                             <td className="px-6 py-2 text-sm text-gray-600 dark:text-gray-400">
-                              {formatCurrency(convertToCurrency(wallet.value, selectedCurrency), selectedCurrency)}
+                              {selectedCurrency === 'HIDDEN' ? '••••••' : formatCurrency(convertToCurrency(wallet.value, selectedCurrency), selectedCurrency)}
                             </td>
                             <td className="px-6 py-2">
                               <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -266,7 +267,7 @@ export default function AssetsPage() {
                   <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                     <div className="text-sm text-gray-500 dark:text-gray-400">Quantidade</div>
                     <div className="text-lg font-semibold text-gray-900 dark:text-white">
-                      {(viewMode === 'grouped' ? asset.totalQuantity : asset.quantity).toLocaleString('en-US', { 
+                      {selectedCurrency === 'HIDDEN' ? '••••••' : (viewMode === 'grouped' ? asset.totalQuantity : asset.quantity).toLocaleString('en-US', { 
                         minimumFractionDigits: 2, 
                         maximumFractionDigits: 8 
                       })}
@@ -275,7 +276,7 @@ export default function AssetsPage() {
                   <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                     <div className="text-sm text-gray-500 dark:text-gray-400">Valor Total</div>
                     <div className="text-lg font-semibold text-gray-900 dark:text-white">
-                      {formatCurrency(convertToCurrency(
+                      {selectedCurrency === 'HIDDEN' ? '••••••' : formatCurrency(convertToCurrency(
                         viewMode === 'grouped' ? asset.totalValue : asset.value, 
                         selectedCurrency
                       ), selectedCurrency)}
